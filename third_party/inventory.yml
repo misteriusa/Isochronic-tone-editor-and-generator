@@ -1,0 +1,51 @@
+- name: jna
+  version: "4.2.1"
+  maven: true
+  license: "LGPL-2.1"
+  path: "SINE/lib/jna-4.2.1.jar"
+- name: java-flac-encoder
+  version: "0.3.1"
+  maven: true
+  notes: "Newer version available on Maven Central"
+  license: "GPL-2.0 or later" # unverified
+  path: "SINE/lib/javaFlacEncoder-0.3.1.jar"
+- name: JavaLAME
+  version: "unknown"
+  maven: false
+  license: "GPL-2.0" # unverified
+  path: "SINE/lib/JavaLAME.jar"
+- name: LibBWEntrainment
+  version: "unknown"
+  maven: false
+  license: "GPL-3.0" # assumed from project
+  path: "SINE/lib/LibBWEntrainment.jar"
+- name: LibBWEntrainment-SoundBackend-FLAC
+  version: "unknown"
+  maven: false
+  license: "GPL-3.0" # assumed from project
+  path: "SINE/lib/LibBWEntrainment-SoundBackend-FLAC.jar"
+- name: LibBWEntrainment-SoundBackend-MP3
+  version: "unknown"
+  maven: false
+  license: "GPL-3.0" # assumed from project
+  path: "SINE/lib/LibBWEntrainment-SoundBackend-MP3.jar"
+- name: LibBWEntrainment-SoundBackend-PC
+  version: "unknown"
+  maven: false
+  license: "GPL-3.0" # assumed from project
+  path: "SINE/lib/LibBWEntrainment-SoundBackend-PC.jar"
+- name: LibBWEntrainment-SoundBackend-Wav
+  version: "unknown"
+  maven: false
+  license: "GPL-3.0" # assumed from project
+  path: "SINE/lib/LibBWEntrainment-SoundBackend-Wav.jar"
+- name: LibBWEntrainment-Renderer-Isochronic
+  version: "unknown"
+  maven: false
+  license: "GPL-3.0" # assumed from project
+  path: "SINE/lib/LibBWEntrainment-Renderer-Isochronic.jar"
+- name: apple
+  version: "0.0.2"
+  maven: false
+  license: "Unknown"
+  path: "SINE/lib/apple-0.0.2.jar"
