@@ -7,7 +7,6 @@ The effect is not permanent, and fades away in less than a minute after the stim
 
 Isochronic tones are a commonly used aural stimuli for Brainwave Entrainment, consisting of short pulses of a sine wave, varying in frequency. Unlike binaural beats, isochronic tones can be played on speakers. 
 
-This PC Version include an Editor to make your own sessions.
  
 ## Website
 [SINE Isochronic Entrainer](https://sine.fdossena.com/)
@@ -28,6 +27,18 @@ This PC Version include an Editor to make your own sessions.
  
 ## Usage
 Import the projects into Netbeans.
+
+### JavaFX prototype
+The `player` module contains an experimental JavaFX entry point called `MainFX`.
+To run it you need OpenJFX on your classpath:
+```bash
+javac --module-path /path/to/javafx/lib --add-modules javafx.controls 
+      -cp "SINE/lib/*" -d build SINE/src/com/dosse/bwentrain/player/MainFX.java
+java --module-path /path/to/javafx/lib --add-modules javafx.controls 
+     -cp "build:SINE/lib/*" com.dosse.bwentrain.player.MainFX
+```
+
+The Swing based UI remains the default; this prototype only demonstrates basic playback controls.
 
 _SETUP contains all the files used to build the GNU/Linux packages, the installer for Windows and the Mac app packages.
 To build the installer for Windows, you'll need [Inno Setup](https://www.jrsoftware.org/isinfo.php) and [launch4j](https://launch4j.sourceforge.net/)
