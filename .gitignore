@@ -10,3 +10,8 @@
 */dist/
 */nbdist/
 */.nb-gradle/
+
+# Gradle
+.gradle/
+build/
+*/build/

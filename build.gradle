@@ -1,0 +1,60 @@
+allprojects {
+    repositories {
+        mavenCentral()
+        flatDir {
+            dirs "${rootDir}/libs"
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    dependencies {
+        implementation name: 'LibBWEntrainment'
+        implementation name: 'LibBWEntrainment-Renderer-Isochronic'
+        implementation name: 'LibBWEntrainment-SoundBackend-FLAC'
+        implementation name: 'LibBWEntrainment-SoundBackend-MP3'
+        implementation name: 'LibBWEntrainment-SoundBackend-PC'
+        implementation name: 'LibBWEntrainment-SoundBackend-Wav'
+        implementation name: 'JavaLAME'
+        implementation name: 'javaFlacEncoder-0.3.1'
+        implementation name: 'apple-0.0.2'
+        implementation name: 'jna-4.2.1'
+    }
+
+    tasks.register('fatJar', Jar) {
+        archiveClassifier.set('all')
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        manifest.attributes('Main-Class': application.mainClass.get())
+        from {
+            configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+        with jar
+    }
+}
+
+project(':player') {
+    application {
+        mainClass = 'com.dosse.bwentrain.player.Main'
+    }
+}
+
+project(':editor') {
+    application {
+        mainClass = 'com.dosse.bwentrain.editor.Main'
+    }
+}
+
+project(':cli') {
+    application {
+        mainClass = 'com.dosse.bwentrain.cli.Main'
+    }
+}
