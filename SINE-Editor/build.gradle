@@ -1,0 +1,24 @@
+plugins {
+    id 'application'
+    id 'org.beryx.jlink'
+}
+
+application {
+    mainClass = 'com.dosse.bwentrain.editor.Main'
+}
+
+dependencies {
+    implementation fileTree('lib') { include '*.jar' }
+}
+
+jlink {
+    imageName = 'SINE-Editor'
+    launcher {
+        name = 'sine-editor'
+    }
+    jpackage {
+        imageName = 'SINE-Editor'
+        installerName = 'SINE-Editor'
+        icon = file('../_SETUP/Windows/editor.ico').absolutePath
+    }
+}

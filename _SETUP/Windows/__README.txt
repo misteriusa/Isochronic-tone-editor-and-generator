@@ -9,3 +9,4 @@ Steps to build installer:
 -At this point, setupFiles should contain SINE.exe, SINE.jar, SINE-Editor.exe, SINE-Editor.jar, SINE-CLI.exe, SINE-CLI.jar, presetIcon.ico, a folder named lib with a bunch of jar files in it, editor_manual with a bunch of html and png files, and jre with a java runtime into it (bin, lib, ...)
 -Compile setup.iss with Inno Setup Compiler
 -OPTIONAL: sign the installer exe file using your pkf certificate
+\nDeprecated: replaced by Gradle jpackage tasks.
