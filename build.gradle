@@ -1,12 +1,67 @@
+/*
+ * This file defines the build script for the project.
+ * It specifies plugins, project information, repositories, dependencies,
+ * and source code locations.
+ */
+
 plugins {
-    id 'org.beryx.jlink' version '2.26.0' apply false
+    // Apply the java plugin to add support for compiling Java code.
+    id 'java'
 }
 
-subprojects {
-    apply plugin: 'java'
-    repositories { mavenCentral() }
-    java {
-        sourceCompatibility = JavaVersion.VERSION_1_7
-        targetCompatibility = JavaVersion.VERSION_1_7
+// Define the project's group and version, used for packaging.
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+// Set the Java version compatibility for the source and target.
+// Code will be compiled to be compatible with Java 8.
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+// Define the repositories where dependencies are located.
+repositories {
+    // Use Maven Central for fetching dependencies.
+    mavenCentral()
+}
+
+// Define the project's dependencies.
+dependencies {
+    // Add JUnit 5 as a dependency for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+    // Include local JAR files from the 'SINE/lib' directory as implementation dependencies.
+    implementation files(
+        'SINE/lib/LibBWEntrainment.jar',
+        'SINE/lib/LibBWEntrainment-Renderer-Isochronic.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-PC.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-FLAC.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-MP3.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-Wav.jar',
+        'SINE/lib/JavaLAME.jar',
+        'SINE/lib/javaFlacEncoder-0.3.1.jar',
+        'SINE/lib/jna-4.2.1.jar',
+        'SINE/lib/apple-0.0.2.jar'
+    )
+}
+
+// Configure the 'test' task.
+test {
+    // Use the JUnit Platform to run tests, which is required for JUnit 5.
+    useJUnitPlatform()
+}
+
+// Define custom source sets to specify where the source code is located.
+sourceSets {
+    main {
+        java {
+            // Set the main source directory.
+            srcDirs = ['SINE-Editor/src']
+        }
+    }
+    test {
+        java {
+            // Set the test source directory.
+            srcDirs = ['tests']
+        }
     }
 }

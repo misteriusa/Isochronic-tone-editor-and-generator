@@ -44,6 +44,10 @@ The Swing based UI remains the default; this prototype only demonstrates basic p
 _SETUP contains all the files used to build the GNU/Linux packages, the installer for Windows and the Mac app packages.
 To build the installer for Windows, you'll need [Inno Setup](https://www.jrsoftware.org/isinfo.php) and [launch4j](https://launch4j.sourceforge.net/)
 
+## Building and testing
+This project uses a small Gradle build defined in `build.gradle`. The Gradle wrapper JAR is omitted from version control to avoid storing binary files.
+Run `gradle wrapper` to generate it locally or execute tasks directly with a system Gradle installation, e.g. `gradle test`.
+
 There were modifications
 =======
 ## Usage
