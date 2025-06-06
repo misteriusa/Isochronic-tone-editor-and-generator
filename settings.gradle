@@ -6,11 +6,13 @@
 // Set the name of the root project.
 rootProject.name = 'sine'
 
-// Include 'player' and 'editor' as sub-projects.
-include('player', 'editor')
+// Include all sub-projects.
+include 'player', 'editor', 'cli'
 
-// Define the directory for the 'player' sub-project.
+// Define the custom directory for the 'player' sub-project.
 project(':player').projectDir = file('SINE')
 
-// Define the directory for the 'editor' sub-project.
+// Define the custom directory for the 'editor' sub-project.
 project(':editor').projectDir = file('SINE-Editor')
+
+// The 'cli' project is assumed to be in a directory named 'cli' by convention.

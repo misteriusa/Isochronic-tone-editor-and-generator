@@ -12,7 +12,12 @@
 */.nb-gradle/
 
 # Gradle
+# Ignore the .gradle directory, which stores caches and build information.
 .gradle/
 
-# Gradle wrapper JAR intentionally omitted in some branches, but good to ignore.
+# Ignore all build directories, both at the root and in sub-projects.
+build/
+*/build/
+
+# Ignore the Gradle wrapper JAR file. The wrapper script will download it if needed.
 gradle/wrapper/gradle-wrapper.jar

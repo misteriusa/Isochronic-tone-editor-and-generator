@@ -1,67 +1,89 @@
 /*
- * This file defines the build script for the project.
- * It specifies plugins, project information, repositories, dependencies,
- * and source code locations.
+ * This file defines the build script for the root project and configures all sub-projects.
  */
 
-plugins {
-    // Apply the java plugin to add support for compiling Java code.
-    id 'java'
-}
-
-// Define the project's group and version, used for packaging.
-group = 'com.example'
-version = '1.0-SNAPSHOT'
-
-// Set the Java version compatibility for the source and target.
-// Code will be compiled to be compatible with Java 8.
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-// Define the repositories where dependencies are located.
-repositories {
-    // Use Maven Central for fetching dependencies.
-    mavenCentral()
-}
-
-// Define the project's dependencies.
-dependencies {
-    // Add JUnit 5 as a dependency for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
-
-    // Include local JAR files from the 'SINE/lib' directory as implementation dependencies.
-    implementation files(
-        'SINE/lib/LibBWEntrainment.jar',
-        'SINE/lib/LibBWEntrainment-Renderer-Isochronic.jar',
-        'SINE/lib/LibBWEntrainment-SoundBackend-PC.jar',
-        'SINE/lib/LibBWEntrainment-SoundBackend-FLAC.jar',
-        'SINE/lib/LibBWEntrainment-SoundBackend-MP3.jar',
-        'SINE/lib/LibBWEntrainment-SoundBackend-Wav.jar',
-        'SINE/lib/JavaLAME.jar',
-        'SINE/lib/javaFlacEncoder-0.3.1.jar',
-        'SINE/lib/jna-4.2.1.jar',
-        'SINE/lib/apple-0.0.2.jar'
-    )
-}
-
-// Configure the 'test' task.
-test {
-    // Use the JUnit Platform to run tests, which is required for JUnit 5.
-    useJUnitPlatform()
-}
-
-// Define custom source sets to specify where the source code is located.
-sourceSets {
-    main {
-        java {
-            // Set the main source directory.
-            srcDirs = ['SINE-Editor/src']
+// Configure all projects (the root project and all sub-projects)
+allprojects {
+    repositories {
+        // Use Maven Central for standard dependencies.
+        mavenCentral()
+        // Define a flat directory repository to include local JAR files from the 'libs' folder.
+        flatDir {
+            dirs "${rootDir}/libs"
         }
     }
-    test {
-        java {
-            // Set the test source directory.
-            srcDirs = ['tests']
+}
+
+// Configure all sub-projects (player, editor, cli).
+subprojects {
+    // Apply the 'java' plugin for Java compilation and the 'application' plugin to create executables.
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    // Configure the Java toolchain to use Java 17 for all sub-projects.
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
         }
+    }
+
+    // Define dependencies for all sub-projects.
+    dependencies {
+        // Add JUnit 5 for testing.
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+        // Add local JARs from the 'libs' directory as dependencies by name.
+        implementation name: 'LibBWEntrainment'
+        implementation name: 'LibBWEntrainment-Renderer-Isochronic'
+        implementation name: 'LibBWEntrainment-SoundBackend-FLAC'
+        implementation name: 'LibBWEntrainment-SoundBackend-MP3'
+        implementation name: 'LibBWEntrainment-SoundBackend-PC'
+        implementation name: 'LibBWEntrainment-SoundBackend-Wav'
+        implementation name: 'JavaLAME'
+        implementation name: 'javaFlacEncoder-0.3.1'
+        implementation name: 'apple-0.0.2'
+        implementation name: 'jna-4.2.1'
+    }
+
+    // Configure the 'test' task to use the JUnit Platform for running tests.
+    test {
+        useJUnitPlatform()
+    }
+
+    // Register a custom 'fatJar' task to create a single, executable JAR
+    // that includes all dependencies.
+    tasks.register('fatJar', Jar) {
+        archiveClassifier.set('all') // Appends '-all' to the JAR file name.
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Exclude duplicate files from dependencies.
+        manifest.attributes('Main-Class': application.mainClass.get()) // Set the main class in the manifest.
+        // Collect all runtime dependencies and package them into the JAR.
+        from {
+            configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+        with jar
+    }
+}
+
+// Configure the 'player' sub-project.
+project(':player') {
+    application {
+        // Set the main class for the player application.
+        mainClass = 'com.dosse.bwentrain.player.Main'
+    }
+}
+
+// Configure the 'editor' sub-project.
+project(':editor') {
+    application {
+        // Set the main class for the editor application.
+        mainClass = 'com.dosse.bwentrain.editor.Main'
+    }
+}
+
+// Configure the 'cli' sub-project.
+project(':cli') {
+    application {
+        // Set the main class for the command-line interface application.
+        mainClass = 'com.dosse.bwentrain.cli.Main'
     }
 }
