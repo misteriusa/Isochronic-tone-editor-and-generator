@@ -1,3 +1,5 @@
+# This workflow defines a Continuous Integration (CI) pipeline that is triggered
+# on pushes to the 'main' branch and on any pull request.
 name: CI
 
 on:
@@ -6,18 +8,34 @@ on:
   pull_request:
 
 jobs:
+  # The 'build' job runs on an Ubuntu runner.
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK
+      # Step 1: Check out the repository's code.
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up the Java Development Kit (JDK).
+      # This uses Java version 17 from the 'temurin' distribution.
+      # It also caches Gradle dependencies to speed up future builds.
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: '17'
           distribution: 'temurin'
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 8.14
-      - name: Build and test
-        run: gradle test --no-daemon
+          cache: gradle
+
+      # Step 3: Grant execute permission to the Gradle wrapper script.
+      # This is necessary to ensure the script can be run on the Linux runner.
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Step 4: Build the project using the Gradle wrapper.
+      # The 'build' task compiles the code, runs tests, and assembles the application.
+      # The GRADLE_OPTS environment variable is used to disable the Gradle daemon,
+      # which is recommended for CI environments.
+      - name: Build with Gradle
+        run: ./gradlew build
+        env:
+          GRADLE_OPTS: -Dorg.gradle.daemon=false

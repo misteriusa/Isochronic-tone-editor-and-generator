@@ -7,7 +7,6 @@ The effect is not permanent, and fades away in less than a minute after the stim
 
 Isochronic tones are a commonly used aural stimuli for Brainwave Entrainment, consisting of short pulses of a sine wave, varying in frequency. Unlike binaural beats, isochronic tones can be played on speakers. 
 
-This PC Version include an Editor to make your own sessions.
  
 ## Website
 [SINE Isochronic Entrainer](https://sine.fdossena.com/)
@@ -26,8 +25,21 @@ This PC Version include an Editor to make your own sessions.
 * macOS
 * Any platform supported by Java SE 7 or newer
  
+codex/add-javafx-prototype-for-playback-controls
 ## Usage
 Import the projects into Netbeans.
+
+### JavaFX prototype
+The `player` module contains an experimental JavaFX entry point called `MainFX`.
+To run it you need OpenJFX on your classpath:
+```bash
+javac --module-path /path/to/javafx/lib --add-modules javafx.controls 
+      -cp "SINE/lib/*" -d build SINE/src/com/dosse/bwentrain/player/MainFX.java
+java --module-path /path/to/javafx/lib --add-modules javafx.controls 
+     -cp "build:SINE/lib/*" com.dosse.bwentrain.player.MainFX
+```
+
+The Swing based UI remains the default; this prototype only demonstrates basic playback controls.
 
 _SETUP contains all the files used to build the GNU/Linux packages, the installer for Windows and the Mac app packages.
 To build the installer for Windows, you'll need [Inno Setup](https://www.jrsoftware.org/isinfo.php) and [launch4j](https://launch4j.sourceforge.net/)
@@ -36,12 +48,21 @@ To build the installer for Windows, you'll need [Inno Setup](https://www.jrsoftw
 This project uses a small Gradle build defined in `build.gradle`. The Gradle wrapper JAR is omitted from version control to avoid storing binary files.
 Run `gradle wrapper` to generate it locally or execute tasks directly with a system Gradle installation, e.g. `gradle test`.
 
+There were modifications
+=======
+## Usage
+Import the projects into Netbeans or build with Gradle.
+
+Run `./gradlew :player:jpackage` to create the player installer and `./gradlew :editor:jpackage` for the editor. Icons are taken from `_SETUP/Windows`.
+Manual packaging scripts in `_SETUP` are deprecated and kept only for reference.
+
 ## Screenshots
 ![Screenshot](https://fdossena.com/sine/pc1.png)
 ![Screenshot](https://fdossena.com/sine/pc2.png)
 ![Screenshot](https://fdossena.com/sine/website1.png)
 
 ## License
+See [LICENSE](LICENSE) for the full license text.
 Copyright (C) 2014-2020 Federico Dossena
 
 This program is free software: you can redistribute it and/or modify

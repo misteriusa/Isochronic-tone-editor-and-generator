@@ -1,0 +1,24 @@
+plugins {
+    id 'application'
+    id 'org.beryx.jlink'
+}
+
+application {
+    mainClass = 'com.dosse.bwentrain.player.Main'
+}
+
+dependencies {
+    implementation fileTree('lib') { include '*.jar' }
+}
+
+jlink {
+    imageName = 'SINE'
+    launcher {
+        name = 'sine-player'
+    }
+    jpackage {
+        imageName = 'SINE'
+        installerName = 'SINE'
+        icon = file('../_SETUP/Windows/player.ico').absolutePath
+    }
+}

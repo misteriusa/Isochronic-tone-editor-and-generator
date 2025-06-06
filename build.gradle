@@ -1,20 +1,35 @@
+/*
+ * This file defines the build script for the project.
+ * It specifies plugins, project information, repositories, dependencies,
+ * and source code locations.
+ */
+
 plugins {
+    // Apply the java plugin to add support for compiling Java code.
     id 'java'
 }
 
+// Define the project's group and version, used for packaging.
 group = 'com.example'
 version = '1.0-SNAPSHOT'
 
+// Set the Java version compatibility for the source and target.
+// Code will be compiled to be compatible with Java 8.
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+// Define the repositories where dependencies are located.
 repositories {
+    // Use Maven Central for fetching dependencies.
     mavenCentral()
 }
 
+// Define the project's dependencies.
 dependencies {
+    // Add JUnit 5 as a dependency for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 
+    // Include local JAR files from the 'SINE/lib' directory as implementation dependencies.
     implementation files(
         'SINE/lib/LibBWEntrainment.jar',
         'SINE/lib/LibBWEntrainment-Renderer-Isochronic.jar',
@@ -29,18 +44,23 @@ dependencies {
     )
 }
 
+// Configure the 'test' task.
 test {
+    // Use the JUnit Platform to run tests, which is required for JUnit 5.
     useJUnitPlatform()
 }
 
+// Define custom source sets to specify where the source code is located.
 sourceSets {
     main {
         java {
+            // Set the main source directory.
             srcDirs = ['SINE-Editor/src']
         }
     }
     test {
         java {
+            // Set the test source directory.
             srcDirs = ['tests']
         }
     }

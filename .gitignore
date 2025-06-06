@@ -1,9 +1,9 @@
-### macOS ###
+# macOS
 *.DS_Store
 .AppleDouble
 .LSOverride
 
-### NetBeans ###
+# NetBeans
 */nbproject/private/
 */build/
 */nbbuild/
@@ -11,5 +11,8 @@
 */nbdist/
 */.nb-gradle/
 
-# Gradle wrapper JAR intentionally omitted
+# Gradle
+.gradle/
+
+# Gradle wrapper JAR intentionally omitted in some branches, but good to ignore.
 gradle/wrapper/gradle-wrapper.jar
