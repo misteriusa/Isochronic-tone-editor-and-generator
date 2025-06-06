@@ -1,2 +1,18 @@
+/*
+ * This file defines the settings for the Gradle build,
+ * including the root project name and any included sub-projects.
+ */
+
+// Set the name of the root project.
 rootProject.name = 'sine'
+
+// Include all sub-projects.
 include 'player', 'editor', 'cli'
+
+// Define the custom directory for the 'player' sub-project.
+project(':player').projectDir = file('SINE')
+
+// Define the custom directory for the 'editor' sub-project.
+project(':editor').projectDir = file('SINE-Editor')
+
+// The 'cli' project is assumed to be in a directory named 'cli' by convention.

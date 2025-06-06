@@ -1,23 +1,38 @@
+/*
+ * This file defines the build script for the root project and configures all sub-projects.
+ */
+
+// Configure all projects (the root project and all sub-projects)
 allprojects {
     repositories {
+        // Use Maven Central for standard dependencies.
         mavenCentral()
+        // Define a flat directory repository to include local JAR files from the 'libs' folder.
         flatDir {
             dirs "${rootDir}/libs"
         }
     }
 }
 
+// Configure all sub-projects (player, editor, cli).
 subprojects {
+    // Apply the 'java' plugin for Java compilation and the 'application' plugin to create executables.
     apply plugin: 'java'
     apply plugin: 'application'
 
+    // Configure the Java toolchain to use Java 17 for all sub-projects.
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(17)
         }
     }
 
+    // Define dependencies for all sub-projects.
     dependencies {
+        // Add JUnit 5 for testing.
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+        // Add local JARs from the 'libs' directory as dependencies by name.
         implementation name: 'LibBWEntrainment'
         implementation name: 'LibBWEntrainment-Renderer-Isochronic'
         implementation name: 'LibBWEntrainment-SoundBackend-FLAC'
@@ -30,10 +45,18 @@ subprojects {
         implementation name: 'jna-4.2.1'
     }
 
+    // Configure the 'test' task to use the JUnit Platform for running tests.
+    test {
+        useJUnitPlatform()
+    }
+
+    // Register a custom 'fatJar' task to create a single, executable JAR
+    // that includes all dependencies.
     tasks.register('fatJar', Jar) {
-        archiveClassifier.set('all')
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        manifest.attributes('Main-Class': application.mainClass.get())
+        archiveClassifier.set('all') // Appends '-all' to the JAR file name.
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Exclude duplicate files from dependencies.
+        manifest.attributes('Main-Class': application.mainClass.get()) // Set the main class in the manifest.
+        // Collect all runtime dependencies and package them into the JAR.
         from {
             configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
         }
@@ -41,20 +64,26 @@ subprojects {
     }
 }
 
+// Configure the 'player' sub-project.
 project(':player') {
     application {
+        // Set the main class for the player application.
         mainClass = 'com.dosse.bwentrain.player.Main'
     }
 }
 
+// Configure the 'editor' sub-project.
 project(':editor') {
     application {
+        // Set the main class for the editor application.
         mainClass = 'com.dosse.bwentrain.editor.Main'
     }
 }
 
+// Configure the 'cli' sub-project.
 project(':cli') {
     application {
+        // Set the main class for the command-line interface application.
         mainClass = 'com.dosse.bwentrain.cli.Main'
     }
 }

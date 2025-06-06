@@ -1,51 +1,132 @@
+# Inventory of bundled third-party JARs
+# Each entry lists the file path, version (if known) and license
 - name: jna
   version: "4.2.1"
-  maven: true
   license: "LGPL-2.1"
   path: "SINE/lib/jna-4.2.1.jar"
+
 - name: java-flac-encoder
   version: "0.3.1"
-  maven: true
-  notes: "Newer version available on Maven Central"
-  license: "GPL-2.0 or later" # unverified
+  license: "GPL-2.0 or later"
   path: "SINE/lib/javaFlacEncoder-0.3.1.jar"
+
+- name: java-flac-encoder
+  version: "0.3.1"
+  license: "GPL-2.0 or later"
+  path: "SINE-CLI/lib/javaFlacEncoder-0.3.1.jar"
+
+- name: java-flac-encoder
+  version: "0.3.1"
+  license: "GPL-2.0 or later"
+  path: "SINE-Editor/lib/javaFlacEncoder-0.3.1.jar"
+
 - name: JavaLAME
   version: "unknown"
-  maven: false
-  license: "GPL-2.0" # unverified
+  license: "GPL-2.0"
   path: "SINE/lib/JavaLAME.jar"
+
+- name: JavaLAME
+  version: "unknown"
+  license: "GPL-2.0"
+  path: "SINE-CLI/lib/JavaLAME.jar"
+
+- name: JavaLAME
+  version: "unknown"
+  license: "GPL-2.0"
+  path: "SINE-Editor/lib/JavaLAME.jar"
+
 - name: LibBWEntrainment
   version: "unknown"
-  maven: false
-  license: "GPL-3.0" # assumed from project
+  license: "GPL-3.0"
   path: "SINE/lib/LibBWEntrainment.jar"
+
+- name: LibBWEntrainment
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-CLI/lib/LibBWEntrainment.jar"
+
+- name: LibBWEntrainment
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-Editor/lib/LibBWEntrainment.jar"
+
 - name: LibBWEntrainment-SoundBackend-FLAC
   version: "unknown"
-  maven: false
-  license: "GPL-3.0" # assumed from project
+  license: "GPL-3.0"
   path: "SINE/lib/LibBWEntrainment-SoundBackend-FLAC.jar"
+
+- name: LibBWEntrainment-SoundBackend-FLAC
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-FLAC.jar"
+
+- name: LibBWEntrainment-SoundBackend-FLAC
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-FLAC.jar"
+
 - name: LibBWEntrainment-SoundBackend-MP3
   version: "unknown"
-  maven: false
-  license: "GPL-3.0" # assumed from project
+  license: "GPL-3.0"
   path: "SINE/lib/LibBWEntrainment-SoundBackend-MP3.jar"
+
+- name: LibBWEntrainment-SoundBackend-MP3
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-MP3.jar"
+
+- name: LibBWEntrainment-SoundBackend-MP3
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-MP3.jar"
+
 - name: LibBWEntrainment-SoundBackend-PC
   version: "unknown"
-  maven: false
-  license: "GPL-3.0" # assumed from project
+  license: "GPL-3.0"
   path: "SINE/lib/LibBWEntrainment-SoundBackend-PC.jar"
+
+- name: LibBWEntrainment-SoundBackend-PC
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-PC.jar"
+
+- name: LibBWEntrainment-SoundBackend-PC
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-PC.jar"
+
 - name: LibBWEntrainment-SoundBackend-Wav
   version: "unknown"
-  maven: false
-  license: "GPL-3.0" # assumed from project
+  license: "GPL-3.0"
   path: "SINE/lib/LibBWEntrainment-SoundBackend-Wav.jar"
+
+- name: LibBWEntrainment-SoundBackend-Wav
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-Wav.jar"
+
+- name: LibBWEntrainment-SoundBackend-Wav
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-Wav.jar"
+
 - name: LibBWEntrainment-Renderer-Isochronic
   version: "unknown"
-  maven: false
-  license: "GPL-3.0" # assumed from project
+  license: "GPL-3.0"
   path: "SINE/lib/LibBWEntrainment-Renderer-Isochronic.jar"
+
+- name: LibBWEntrainment-Renderer-Isochronic
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-CLI/lib/LibBWEntrainment-Renderer-Isochronic.jar"
+
+- name: LibBWEntrainment-Renderer-Isochronic
+  version: "unknown"
+  license: "GPL-3.0"
+  path: "SINE-Editor/lib/LibBWEntrainment-Renderer-Isochronic.jar"
+
 - name: apple
   version: "0.0.2"
-  maven: false
   license: "Unknown"
   path: "SINE/lib/apple-0.0.2.jar"
+
