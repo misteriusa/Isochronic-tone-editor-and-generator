@@ -1,0 +1,12 @@
+plugins {
+    id 'org.beryx.jlink' version '2.26.0' apply false
+}
+
+subprojects {
+    apply plugin: 'java'
+    repositories { mavenCentral() }
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
+    }
+}

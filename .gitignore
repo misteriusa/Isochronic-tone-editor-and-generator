@@ -10,3 +10,5 @@
 */dist/
 */nbdist/
 */.nb-gradle/
+gradle/wrapper/gradle-wrapper.jar
+.gradle/
