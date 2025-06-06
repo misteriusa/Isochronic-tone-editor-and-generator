@@ -6,4 +6,4 @@
 
 If you want to use your system JDK, run the scripts without the `-r` arg
 
-You don't have to build both of the apps if you don't want it.
+You don't have to build both of the apps if you don't want it.\nDeprecated: replaced by Gradle jpackage tasks.

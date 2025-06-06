@@ -27,10 +27,10 @@ This PC Version include an Editor to make your own sessions.
 * Any platform supported by Java SE 7 or newer
  
 ## Usage
-Import the projects into Netbeans.
+Import the projects into Netbeans or build with Gradle.
 
-_SETUP contains all the files used to build the GNU/Linux packages, the installer for Windows and the Mac app packages.
-To build the installer for Windows, you'll need [Inno Setup](https://www.jrsoftware.org/isinfo.php) and [launch4j](https://launch4j.sourceforge.net/)
+Run `./gradlew :player:jpackage` to create the player installer and `./gradlew :editor:jpackage` for the editor. Icons are taken from `_SETUP/Windows`.
+Manual packaging scripts in `_SETUP` are deprecated and kept only for reference.
 
 ## Screenshots
 ![Screenshot](https://fdossena.com/sine/pc1.png)

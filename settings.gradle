@@ -1,0 +1,4 @@
+rootProject.name = 'sine'
+include('player', 'editor')
+project(':player').projectDir = file('SINE')
+project(':editor').projectDir = file('SINE-Editor')
