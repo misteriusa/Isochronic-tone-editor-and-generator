@@ -58,6 +58,7 @@ Manual packaging scripts in `_SETUP` are deprecated and kept only for reference.
 ![Screenshot](https://fdossena.com/sine/website1.png)
 
 ## License
+See [LICENSE](LICENSE) for the full license text.
 Copyright (C) 2014-2020 Federico Dossena
 
 This program is free software: you can redistribute it and/or modify
