@@ -10,3 +10,6 @@
 */dist/
 */nbdist/
 */.nb-gradle/
+
+# Gradle wrapper JAR intentionally omitted
+gradle/wrapper/gradle-wrapper.jar

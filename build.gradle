@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+    implementation files(
+        'SINE/lib/LibBWEntrainment.jar',
+        'SINE/lib/LibBWEntrainment-Renderer-Isochronic.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-PC.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-FLAC.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-MP3.jar',
+        'SINE/lib/LibBWEntrainment-SoundBackend-Wav.jar',
+        'SINE/lib/JavaLAME.jar',
+        'SINE/lib/javaFlacEncoder-0.3.1.jar',
+        'SINE/lib/jna-4.2.1.jar',
+        'SINE/lib/apple-0.0.2.jar'
+    )
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['SINE-Editor/src']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['tests']
+        }
+    }
+}
