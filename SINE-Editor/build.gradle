@@ -1,6 +1,7 @@
 plugins {
     id 'application'
-    id 'org.beryx.jlink'
+    // Add version for jlink plugin to fix build failure
+    id 'org.beryx.jlink' version '2.26.0'
 }
 
 application {
