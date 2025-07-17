@@ -24,10 +24,9 @@ Isochronic tones are a commonly used aural stimuli for Brainwave Entrainment, co
 * Windows
 * macOS
 * Any platform supported by Java SE 7 or newer
- 
-codex/add-javafx-prototype-for-playback-controls
+
 ## Usage
-Import the projects into Netbeans.
+Import the projects into Netbeans or build with Gradle.
 
 ### JavaFX prototype
 The `player` module contains an experimental JavaFX entry point called `MainFX`.
@@ -48,10 +47,6 @@ To build the installer for Windows, you'll need [Inno Setup](https://www.jrsoftw
 This project uses a small Gradle build defined in `build.gradle`. The Gradle wrapper JAR is omitted from version control to avoid storing binary files.
 Run `gradle wrapper` to generate it locally or execute tasks directly with a system Gradle installation, e.g. `gradle test`.
 
-There were modifications
-=======
-## Usage
-Import the projects into Netbeans or build with Gradle.
 
 Run `./gradlew :player:jpackage` to create the player installer and `./gradlew :editor:jpackage` for the editor. Icons are taken from `_SETUP/Windows`.
 Manual packaging scripts in `_SETUP` are deprecated and kept only for reference.
