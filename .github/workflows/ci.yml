@@ -26,16 +26,17 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # Step 3: Grant execute permission to the Gradle wrapper script.
-      # This is necessary to ensure the script can be run on the Linux runner.
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      # Step 3: Install Gradle so the build can run without a bundled wrapper.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.14
 
-      # Step 4: Build the project using the Gradle wrapper.
+      # Step 4: Build the project using the installed Gradle.
       # The 'build' task compiles the code, runs tests, and assembles the application.
       # The GRADLE_OPTS environment variable is used to disable the Gradle daemon,
       # which is recommended for CI environments.
       - name: Build with Gradle
-        run: ./gradlew build
+        run: gradle build
         env:
           GRADLE_OPTS: -Dorg.gradle.daemon=false
