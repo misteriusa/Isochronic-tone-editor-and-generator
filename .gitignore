@@ -19,5 +19,5 @@
 build/
 */build/
 
-# Ignore the Gradle wrapper JAR file. The wrapper script will download it if needed.
+# The Gradle wrapper JAR is regenerated in CI; ignore the binary artifact.
 gradle/wrapper/gradle-wrapper.jar
