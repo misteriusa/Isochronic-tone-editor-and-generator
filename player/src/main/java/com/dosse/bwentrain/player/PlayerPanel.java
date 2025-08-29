@@ -20,6 +20,9 @@ import com.dosse.bwentrain.core.Preset;
 import com.dosse.bwentrain.renderers.IRenderer;
 import com.dosse.bwentrain.renderers.isochronic.IsochronicRenderer;
 import com.dosse.bwentrain.sound.backends.pc.PCSoundBackend;
+import com.dosse.bwentrain.player.dsp.EffectSoundDevice;
+import com.dosse.bwentrain.player.dsp.ReverbEffect;
+import com.dosse.bwentrain.player.dsp.FilterEffect;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -30,6 +33,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JCheckBox;
 import javax.swing.Timer;
 
 /**
@@ -48,9 +52,13 @@ public class PlayerPanel extends JPanel {
 
     private JLabel playPauseButton, status, volBarText;
     private ProgressBar pBar, volBar;
+    private JCheckBox reverbToggle, filterToggle;
     private final Timer t; //updates status and progress periodically
 
     private IRenderer p;
+    private EffectSoundDevice effectDevice;
+    private final ReverbEffect reverbEffect = new ReverbEffect();
+    private final FilterEffect filterEffect = new FilterEffect();
 
     //converts time to HH:MM:SS String
     private String toHMS(float t) {
@@ -144,6 +152,24 @@ public class PlayerPanel extends JPanel {
         add(pBar);
         add(volBarText);
         add(volBar);
+        reverbToggle = new JCheckBox("Reverb");
+        reverbToggle.setForeground(Main.TEXT);
+        reverbToggle.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateEffects();
+            }
+        });
+        add(reverbToggle);
+        filterToggle = new JCheckBox("Filter");
+        filterToggle.setForeground(Main.TEXT);
+        filterToggle.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateEffects();
+            }
+        });
+        add(filterToggle);
         addComponentListener(new ComponentAdapter() {
 
             @Override
@@ -174,6 +200,19 @@ public class PlayerPanel extends JPanel {
         t.start();
     }
 
+    private void updateEffects() {
+        if (effectDevice == null) {
+            return;
+        }
+        effectDevice.clearEffects();
+        if (reverbToggle.isSelected()) {
+            effectDevice.addEffect(reverbEffect);
+        }
+        if (filterToggle.isSelected()) {
+            effectDevice.addEffect(filterEffect);
+        }
+    }
+
     public Preset getCurrentPreset() {
         return p!=null ? p.getPreset() : null;
     }
@@ -183,8 +222,10 @@ public class PlayerPanel extends JPanel {
             p.stopPlaying();
             p = null;
         }
-        p = new IsochronicRenderer(preset, new PCSoundBackend(44100, 1), -1);
+        effectDevice = new EffectSoundDevice(new PCSoundBackend(44100, 1));
+        p = new IsochronicRenderer(preset, effectDevice, -1);
         p.setVolume((float) volBar.getValue() / (float) volBar.getMaximum());
+        updateEffects();
     }
 
     public void pause() {
@@ -219,6 +260,10 @@ public class PlayerPanel extends JPanel {
         volBar.setBounds(x, y, VOL_BAR_WIDTH, BAR_HEIGHT); //volume bar on the right, below progress
         volBarText.setBounds(volBar.getX() - Main.GENERIC_MARGIN - VOL_TEXT_WIDTH, y, VOL_TEXT_WIDTH, BAR_HEIGHT); //volume bar text at its left
         status.setBounds(0, y, x - Main.GENERIC_MARGIN, BAR_HEIGHT); //status takes up rest of the line
+        y += BAR_HEIGHT + Main.GENERIC_MARGIN;
+        int cbWidth = Math.min(getWidth() / 2 - Main.GENERIC_MARGIN, 100);
+        reverbToggle.setBounds(0, y, cbWidth, BAR_HEIGHT);
+        filterToggle.setBounds(cbWidth + Main.GENERIC_MARGIN, y, cbWidth, BAR_HEIGHT);
         repaint(); //must force repaint on some systems
     }
     
@@ -227,5 +272,6 @@ public class PlayerPanel extends JPanel {
             p.stopPlaying();
             p=null;
         }
+        effectDevice = null;
     }
 }
