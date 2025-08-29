@@ -51,6 +51,15 @@ Run `gradle wrapper` to generate it locally or execute tasks directly with a sys
 Run `./gradlew :player:jpackage` to create the player installer and `./gradlew :editor:jpackage` for the editor. Icons are taken from `_SETUP/Windows`.
 Manual packaging scripts in `_SETUP` are deprecated and kept only for reference.
 
+### Command line batch export
+The CLI can convert multiple session files in parallel:
+
+```bash
+SINE-CLI --batch path/to/presets path/to/output mp3
+```
+
+Each preset in `path/to/presets` is rendered to an MP3 file with the same base name in `path/to/output`. The `format` argument may be `mp3`, `wav`, or `flac`; it defaults to `wav`.
+
 ## Screenshots
 ![Screenshot](https://fdossena.com/sine/pc1.png)
 ![Screenshot](https://fdossena.com/sine/pc2.png)

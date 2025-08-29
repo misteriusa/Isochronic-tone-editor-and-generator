@@ -25,6 +25,9 @@ import com.dosse.bwentrain.sound.backends.mp3.MP3FileSoundBackend;
 import com.dosse.bwentrain.sound.backends.pc.PCSoundBackend;
 import com.dosse.bwentrain.sound.backends.wav.WavFileSoundBackend;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -35,6 +38,24 @@ import org.xml.sax.InputSource;
  * @author dosse
  */
 public class Main {
+
+    /**
+     * Functional interface used to export presets. Allows test code to inject a
+     * mock exporter so that the batch logic can be tested without generating
+     * audio files.
+     */
+    @FunctionalInterface
+    public interface PresetExporter {
+        void export(String in, String out, int loop) throws Exception;
+    }
+
+    /** Default exporter used in production. */
+    private static PresetExporter exporter = Main::exportPresetInternal;
+
+    /** Allows tests to replace the exporter. */
+    static void setExporter(PresetExporter e) {
+        exporter = e;
+    }
 
     //converts time to HH:MM:SS String
 
@@ -94,42 +115,83 @@ public class Main {
     }
     
     private static void exportPreset(String in, String out, int loop) {
-        Preset x = loadPreset(in);
-        //export the Preset
-        ISoundDevice s = null;
         try {
-            if (out.toLowerCase().endsWith(".mp3")) {
-                s = new MP3FileSoundBackend(out, 44100, 1, 96);
-            }
-            if (out.toLowerCase().endsWith(".wav")) {
-                s = new WavFileSoundBackend(out, 44100, 1);
-            }
-            if (out.toLowerCase().endsWith(".flac")) {
-                s = new FLACFileSoundBackend(out, 44100, 1);
-            }
-        } catch (Exception ex) {
-            System.out.println("Can't create file " + out);
-            System.exit(3);
-        }
-        if (s == null) {
-            showHelp();
-            System.exit(-1);
-        }
-        try {
-            IRenderer r = new IsochronicRenderer(x, s, loop);
-            r.play();
-            while (r.isPlaying()) {
-                Thread.sleep(1000);
-                System.out.println((r.getPosition() / r.getLength()) * 100 + "%");
-            }
-            r.stopPlaying();
+            exporter.export(in, out, loop);
             System.out.println("100%\nExport complete");
-            r.stopPlaying();
             System.exit(0);
         } catch (Exception e) {
             System.out.println("Device error");
             System.exit(4);
         }
+    }
+
+    /**
+     * Performs the actual preset export. This method mirrors the legacy export
+     * behaviour but throws exceptions instead of exiting so that callers can
+     * decide how to handle failures.
+     */
+    private static void exportPresetInternal(String in, String out, int loop) throws Exception {
+        Preset x = loadPreset(in);
+        ISoundDevice s = null;
+        if (out.toLowerCase().endsWith(".mp3")) {
+            s = new MP3FileSoundBackend(out, 44100, 1, 96);
+        }
+        if (out.toLowerCase().endsWith(".wav")) {
+            s = new WavFileSoundBackend(out, 44100, 1);
+        }
+        if (out.toLowerCase().endsWith(".flac")) {
+            s = new FLACFileSoundBackend(out, 44100, 1);
+        }
+        if (s == null) {
+            throw new IllegalArgumentException("Unsupported format: " + out);
+        }
+        IRenderer r = new IsochronicRenderer(x, s, loop);
+        r.play();
+        while (r.isPlaying()) {
+            Thread.sleep(1000);
+        }
+        r.stopPlaying();
+    }
+
+    /**
+     * Exports all preset files contained in the {@code inputDir} directory to
+     * the {@code outputDir}. A bounded thread pool is used so multiple presets
+     * are rendered in parallel without exhausting system resources.
+     */
+    public static void batchExport(String inputDir, String outputDir, int loop, String format) {
+        File in = new File(inputDir);
+        if (!in.isDirectory()) {
+            System.out.println("Input directory not found: " + inputDir);
+            System.exit(1);
+        }
+        File out = new File(outputDir);
+        out.mkdirs();
+        ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        for (File f : in.listFiles()) {
+            if (!f.isFile()) {
+                continue;
+            }
+            String base = f.getName();
+            int dot = base.lastIndexOf('.');
+            if (dot >= 0) {
+                base = base.substring(0, dot);
+            }
+            File dest = new File(out, base + "." + format);
+            exec.submit(() -> {
+                try {
+                    exporter.export(f.getAbsolutePath(), dest.getAbsolutePath(), loop);
+                } catch (Exception e) {
+                    System.out.println("Failed to export " + f.getName());
+                }
+            });
+        }
+        exec.shutdown();
+        try {
+            exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("Batch export complete");
     }
     
     private static void checkPreset(String path) {
@@ -141,11 +203,13 @@ public class Main {
     private static void showHelp() {
         System.out.println("SINE Isochronic Entrainer - Command Line Interface\nVersion 1.8.6\n\n"
                 + "Syntax:\n"
-                + "SINE-CLI presetFile [--validate|--export fileName [loopCount]]\n\n"
+                + "SINE-CLI presetFile [--validate|--export fileName [loopCount]]\n"
+                + "SINE-CLI --batch inputDir outputDir [format] [loopCount]\n\n"
                 + "Description:\n"
                 + "-Play a Preset:  SINE-CLI presetFile\n"
                 + "-Validate a Preset: SINE-CLI presetFile --validate\n"
-                + "-Export a Preset: SINE-CLI presetFile --export fileName [loopCount]  fileName must end in .mp3, .wav or .flac;  LoopCount (optional) is useful when exporting looping Presets: it's the number of times the loop should be repeated (-1=repeat infinitely, 0=no repeat (default), 1=repeat once, ...)\n\n"
+                + "-Export a Preset: SINE-CLI presetFile --export fileName [loopCount]  fileName must end in .mp3, .wav or .flac;  LoopCount (optional) is useful when exporting looping Presets: it's the number of times the loop should be repeated (-1=repeat infinitely, 0=no repeat (default), 1=repeat once, ...)\n"
+                + "-Batch export all Presets in a directory: SINE-CLI --batch inputDir outputDir [format] [loopCount]  format can be mp3, wav or flac (default wav)\n\n"
                 + "Error codes:\n"
                 + "-1\tsyntax error\n"
                 + "0\tno error\n"
@@ -159,6 +223,16 @@ public class Main {
         if (args.length == 0) {
             showHelp();
             System.exit(-1);
+        }
+        if ("--batch".equals(args[0])) {
+            if (args.length < 3) {
+                showHelp();
+                System.exit(-1);
+            }
+            String format = args.length >= 4 ? args[3] : "wav";
+            int loop = args.length >= 5 ? Integer.parseInt(args[4]) : 0;
+            batchExport(args[1], args[2], loop, format);
+            return;
         }
         if (args.length == 1) {
             playPreset(args[0]);
