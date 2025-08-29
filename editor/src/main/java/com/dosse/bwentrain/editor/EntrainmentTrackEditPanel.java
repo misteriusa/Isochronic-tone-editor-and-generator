@@ -29,6 +29,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -43,6 +46,8 @@ public abstract class EntrainmentTrackEditPanel extends JPanel implements IEdita
     private JScrollPane scrollVol, scrollBaseF, scrollEntF; //container for graphs
     private final JLabel volText, baseFText, entFText, trackVolText, trackVolValue;
     private JSlider trackVol;
+    private final JComboBox<Waveform> waveformBox;
+    private final JSpinner attack, decay, sustain, release;
     protected int trackId;
     private float scale = 1f; //changed with mouse wheel
 
@@ -144,6 +149,20 @@ public abstract class EntrainmentTrackEditPanel extends JPanel implements IEdita
             }
         });
         add(trackVol);
+        waveformBox = new JComboBox<>(Waveform.values());
+        attack = new JSpinner(new SpinnerNumberModel(0.01, 0.0, 10.0, 0.01));
+        decay = new JSpinner(new SpinnerNumberModel(0.1, 0.0, 10.0, 0.01));
+        sustain = new JSpinner(new SpinnerNumberModel(0.8, 0.0, 1.0, 0.01));
+        release = new JSpinner(new SpinnerNumberModel(0.1, 0.0, 10.0, 0.01));
+        waveformBox.addActionListener(e -> EntrainmentTrackEditPanel.this.onEdit());
+        for (JSpinner s : new JSpinner[]{attack, decay, sustain, release}) {
+            s.addChangeListener(e -> EntrainmentTrackEditPanel.this.onEdit());
+        }
+        add(waveformBox);
+        add(attack);
+        add(decay);
+        add(sustain);
+        add(release);
         addComponentListener(new ComponentAdapter() {
 
             @Override
@@ -221,8 +240,18 @@ public abstract class EntrainmentTrackEditPanel extends JPanel implements IEdita
         int x = trackVol.getX() + trackVol.getWidth() + 8;
         trackVolValue.setBounds(x, y, getWidth() - 8 - x, SLIDER_HEIGHT);
         trackVolValue.setText("" + (int) (preset.getEntrainmentTrack(trackId).getTrackVolume() * 100) + "%");
+        int paramsY = y + trackVol.getHeight() + GRAPH_VMARGIN;
+        waveformBox.setBounds(4, paramsY, SLIDER_WIDTH, SLIDER_HEIGHT);
+        int px = waveformBox.getX() + waveformBox.getWidth() + 8;
+        attack.setBounds(px, paramsY, 60, SLIDER_HEIGHT);
+        px += 64;
+        decay.setBounds(px, paramsY, 60, SLIDER_HEIGHT);
+        px += 64;
+        sustain.setBounds(px, paramsY, 60, SLIDER_HEIGHT);
+        px += 64;
+        release.setBounds(px, paramsY, 60, SLIDER_HEIGHT);
         //calculate graph height: it's all the space that's left divided by 3
-        int graphHeight = (getHeight() - trackVol.getX() - trackVol.getHeight() - 3 * LABEL_HEIGHT - 4 * GRAPH_VMARGIN) / 3;
+        int graphHeight = (getHeight() - trackVol.getX() - trackVol.getHeight() - SLIDER_HEIGHT - 3 * LABEL_HEIGHT - 5 * GRAPH_VMARGIN) / 3;
         graphHeight = graphHeight < MIN_GRAPH_HEIGHT ? MIN_GRAPH_HEIGHT : graphHeight > MAX_GRAPH_HEIGHT ? MAX_GRAPH_HEIGHT : graphHeight;
 
         //shitty workaround for shitty swing bug, forces layout to recalculate sizes
