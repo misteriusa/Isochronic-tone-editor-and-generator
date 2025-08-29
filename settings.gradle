@@ -12,7 +12,7 @@ include 'player', 'editor', 'cli'
 // Define the custom directory for the 'player' sub-project.
 project(':player').projectDir = file('SINE')
 
-// Define the custom directory for the 'editor' sub-project.
-project(':editor').projectDir = file('SINE-Editor')
+// Point the 'editor' sub-project at the modern Gradle source tree.
+project(':editor').projectDir = file('editor')
 
 // The 'cli' project is assumed to be in a directory named 'cli' by convention.
