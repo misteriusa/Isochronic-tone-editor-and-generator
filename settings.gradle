@@ -13,6 +13,6 @@ include 'player', 'editor', 'cli'
 project(':player').projectDir = file('SINE')
 
 // Define the custom directory for the 'editor' sub-project.
-project(':editor').projectDir = file('SINE-Editor')
+project(':editor').projectDir = file('editor')
 
 // The 'cli' project is assumed to be in a directory named 'cli' by convention.

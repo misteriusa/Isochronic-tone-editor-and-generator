@@ -44,6 +44,11 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
+import javax.swing.JMenu;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.ButtonGroup;
+import javax.swing.JMenuItem;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -78,6 +83,10 @@ public class Main extends javax.swing.JFrame {
             DEFAULT_BACKGROUND = new ColorUIResource(240, 240, 240); //background color for all windows
 
     public static final float BIG_TEXT_SIZE = 21 * SCALE, TEXT_SIZE = 12 * SCALE, SUB_TEXT_SIZE = 12 * SCALE, SMALL_TEXT_SIZE = 10 * SCALE;
+
+    // UI components added for theme selection and accessibility toggles.
+    private JMenu viewMenu; // container for theme and contrast options
+    private JCheckBoxMenuItem highContrastItem; // toggles high contrast rendering
 
     private static final int DEFAULT_WIDTH = 900, DEFAULT_HEIGHT = 600; //initial size of this window. will be scaled
     private static final int LIST_WIDTH = 200;
@@ -230,6 +239,8 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
+        initializeViewMenu(); // adds theme switcher and high contrast toggle
+        applyTheme(); // apply saved preferences at startup
         setSize((int) (SCALE * DEFAULT_WIDTH + getInsets().left + getInsets().right), (int) (SCALE * DEFAULT_HEIGHT + getInsets().top + getInsets().bottom)); //set size to default size, properly scaled
         setMinimumSize(getSize()); //initial size is also minimum size
         newPreset(); //editor opens with an empty preset loaded
@@ -247,6 +258,74 @@ public class Main extends javax.swing.JFrame {
             }
         });
         setLocationRelativeTo(null); //center the window on the screen
+    }
+
+    /**
+     * Creates the view menu containing theme selection and high contrast toggle.
+     * Menu items expose accessible descriptions for screen readers and mark
+     * roles using {@link AccessibleRole} for future JavaFX compatibility.
+     */
+    private void initializeViewMenu() {
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dosse/bwentrain/editor/locale");
+        viewMenu = new JMenu(bundle.getString("Main.viewMenu.text"));
+        JMenu themeMenu = new JMenu(bundle.getString("Main.themeMenu.text"));
+        ButtonGroup group = new ButtonGroup();
+
+        JRadioButtonMenuItem light = new JRadioButtonMenuItem(bundle.getString("Main.themeLight.text"));
+        light.getAccessibleContext().setAccessibleDescription(bundle.getString("Main.themeLight.desc"));
+        light.addActionListener(e -> {
+            PreferencesManager.setTheme("light");
+            applyTheme();
+        });
+
+        JRadioButtonMenuItem dark = new JRadioButtonMenuItem(bundle.getString("Main.themeDark.text"));
+        dark.getAccessibleContext().setAccessibleDescription(bundle.getString("Main.themeDark.desc"));
+        dark.addActionListener(e -> {
+            PreferencesManager.setTheme("dark");
+            applyTheme();
+        });
+
+        group.add(light);
+        group.add(dark);
+        themeMenu.add(light);
+        themeMenu.add(dark);
+
+        if (PreferencesManager.getTheme().equals("dark")) {
+            dark.setSelected(true);
+        } else {
+            light.setSelected(true);
+        }
+
+        highContrastItem = new JCheckBoxMenuItem(bundle.getString("Main.highContrast.text"));
+        highContrastItem.getAccessibleContext().setAccessibleDescription(bundle.getString("Main.highContrast.desc"));
+        highContrastItem.setSelected(PreferencesManager.isHighContrast());
+        highContrastItem.addActionListener(e -> {
+            PreferencesManager.setHighContrast(highContrastItem.isSelected());
+            applyTheme();
+        });
+
+        viewMenu.add(themeMenu);
+        viewMenu.add(highContrastItem);
+        jMenuBar1.add(viewMenu, jMenuBar1.getMenuCount() - 1); // before help menu
+    }
+
+    /**
+     * Applies the chosen theme and high-contrast preference to the UI.
+     */
+    private void applyTheme() {
+        boolean high = PreferencesManager.isHighContrast();
+        String theme = PreferencesManager.getTheme();
+        if (high) {
+            UIManager.put("control", java.awt.Color.BLACK);
+            UIManager.put("text", java.awt.Color.YELLOW);
+        } else if ("dark".equals(theme)) {
+            UIManager.put("control", java.awt.Color.DARK_GRAY);
+            UIManager.put("text", java.awt.Color.WHITE);
+        } else {
+            UIManager.put("control", DEFAULT_BACKGROUND);
+            UIManager.put("text", java.awt.Color.BLACK);
+        }
+        javax.swing.SwingUtilities.updateComponentTreeUI(this);
     }
 
     private void forceLayoutUpdate() {

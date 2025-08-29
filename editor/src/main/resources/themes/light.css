@@ -1,0 +1,5 @@
+/* Light theme styles */
+.root {
+    -fx-base: #ffffff;
+    -fx-text-fill: #000000;
+}

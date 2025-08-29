@@ -1,0 +1,5 @@
+/* Dark theme styles */
+.root {
+    -fx-base: #333333;
+    -fx-text-fill: #ffffff;
+}

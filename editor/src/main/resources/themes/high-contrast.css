@@ -1,0 +1,5 @@
+/* High contrast overrides */
+.root {
+    -fx-base: #000000;
+    -fx-text-fill: #ffff00;
+}
