@@ -2,6 +2,10 @@
  * This file defines the build script for the root project and configures all sub-projects.
  */
 
+plugins {
+    id 'com.github.spotbugs' version '6.0.14' apply false
+}
+
 // Configure all projects (the root project and all sub-projects)
 allprojects {
     repositories {
@@ -16,9 +20,11 @@ allprojects {
 
 // Configure all sub-projects (player, editor, cli).
 subprojects {
-    // Apply the 'java' plugin for Java compilation and the 'application' plugin to create executables.
+    // Apply core plugins for Java applications and analysis.
     apply plugin: 'java'
     apply plugin: 'application'
+    apply plugin: 'jacoco'
+    apply plugin: 'com.github.spotbugs'
 
     // Configure the Java toolchain to use Java 17 for all sub-projects.
     java {
@@ -45,9 +51,26 @@ subprojects {
         implementation name: 'jna-4.2.1'
     }
 
+    // Configure static analysis and coverage tooling.
+    spotbugs {
+        ignoreFailures = true // Do not fail build on findings; surfaced in reports
+    }
+
+    jacoco {
+        toolVersion = '0.8.11'
+    }
+
     // Configure the 'test' task to use the JUnit Platform for running tests.
     test {
         useJUnitPlatform()
+        finalizedBy jacocoTestReport // Generate coverage after tests
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
     }
 
     // Register a custom 'fatJar' task to create a single, executable JAR
@@ -62,6 +85,13 @@ subprojects {
         }
         with jar
     }
+}
+
+// Aggregate lint task across modules
+tasks.register('lint') {
+    group = 'verification'
+    description = 'Runs static analysis for all modules.'
+    dependsOn subprojects.collect { "${it.path}:spotbugsMain" }
 }
 
 // Configure the 'player' sub-project.
