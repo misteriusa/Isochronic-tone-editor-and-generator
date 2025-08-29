@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Collaborative Editor</title>
+  <style>
+    body { font-family: sans-serif; margin: 1rem; }
+    #peers span { margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+  <button id="join">Join</button>
+  <button id="leave" disabled>Leave</button>
+  <div id="peers"></div>
+  <textarea id="doc" rows="10" cols="50"></textarea>
+  <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+  <script type="module">
+    import { apply, encode, decode } from '../../collab/ot.js';
+
+    const docEl = document.getElementById('doc');
+    const peersEl = document.getElementById('peers');
+    const joinBtn = document.getElementById('join');
+    const leaveBtn = document.getElementById('leave');
+
+    let id = Math.random().toString(36).slice(2);
+    let ws, pc;
+
+    joinBtn.onclick = async () => {
+      ws = new WebSocket('ws://localhost:8080');
+      ws.onmessage = async e => handleSignal(JSON.parse(e.data));
+      ws.onopen = () => ws.send(JSON.stringify({ type: 'join', id }));
+      joinBtn.disabled = true; leaveBtn.disabled = false;
+    };
+
+    leaveBtn.onclick = () => { ws.close(); pc?.close(); joinBtn.disabled=false; leaveBtn.disabled=true; peersEl.textContent=''; };
+
+    function addPeer(pid){ const span=document.createElement('span'); span.id=pid; span.textContent=pid; peersEl.appendChild(span); }
+    function removePeer(pid){ document.getElementById(pid)?.remove(); }
+
+    async function handleSignal(msg){
+      if(msg.type==='peers'){ msg.peers.forEach(addPeer); startConnection(msg.peers[0]); }
+      if(msg.type==='peer-joined'){ addPeer(msg.id); }
+      if(msg.type==='peer-left'){ removePeer(msg.id); }
+      if(msg.type==='signal'){ await pc.signal(msg); }
+    }
+
+    function startConnection(target){
+      pc = new window.SimplePeer({ initiator: !target });
+      pc.on('signal', s => ws.send(JSON.stringify({ type:'signal', id, target: target||s.target, signal: s })));
+      pc.on('connect', () => {
+        pc.on('data', d => { const op=decode(d); docEl.value = apply(docEl.value, op); });
+        docEl.oninput = e => { const op={ type:'insert', index: docEl.value.length-1, text: e.data||''}; pc.send(encode(op)); };
+      });
+    }
+  </script>
+</body>
+</html>

@@ -21,3 +21,6 @@ build/
 
 # The Gradle wrapper JAR is regenerated in CI; ignore the binary artifact.
 gradle/wrapper/gradle-wrapper.jar
+
+# Node.js
+node_modules/
