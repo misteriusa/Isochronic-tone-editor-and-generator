@@ -215,6 +215,20 @@ public class Main extends javax.swing.JFrame {
         }
     };
 
+    //file filter for session files
+    private static final FileFilter SESSION_FILE_FILTER = new FileFilter() {
+
+        @Override
+        public boolean accept(File f) {
+            return f.isDirectory() || f.getName().toLowerCase().endsWith(".sine-session");
+        }
+
+        @Override
+        public String getDescription() {
+            return Utils.getLocString("SESSION_FILE_FILTER_DESCRIPTION");
+        }
+    };
+
     private static final float OPTIMIZE_TOLERANCE = 0.05f; //when running optimize, if a point has the same value as the one before it and the one after it, it is removed. 2 values are considered identical if they differ by less than OPTIMIZE_TOLERANCE
 
     private File lastFile = null, //last opened file (used for quick save)
@@ -422,6 +436,8 @@ public class Main extends javax.swing.JFrame {
         save = new javax.swing.JMenuItem();
         saveAs = new javax.swing.JMenuItem();
         export = new javax.swing.JMenuItem();
+        exportSession = new javax.swing.JMenuItem();
+        importSession = new javax.swing.JMenuItem();
         share = new javax.swing.JMenuItem();
         importHBX = new javax.swing.JMenuItem();
         quit = new javax.swing.JMenuItem();
@@ -539,6 +555,22 @@ public class Main extends javax.swing.JFrame {
             }
         });
         fileMenu.add(export);
+
+        exportSession.setText(bundle.getString("Main.exportSession.text")); // NOI18N
+        exportSession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportSessionActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exportSession);
+
+        importSession.setText(bundle.getString("Main.importSession.text")); // NOI18N
+        importSession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importSessionActionPerformed(evt);
+            }
+        });
+        fileMenu.add(importSession);
 
         share.setText(bundle.getString("Main.share.text")); // NOI18N
         share.addActionListener(new java.awt.event.ActionListener() {
@@ -1051,6 +1083,59 @@ public class Main extends javax.swing.JFrame {
         }
         ExportDialog.export(preset, x, c.getFileFilter());
     }//GEN-LAST:event_exportActionPerformed
+
+    private void exportSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportSessionActionPerformed
+        JFileChooser c = new JFileChooser(lastDir);
+        c.setAcceptAllFileFilterUsed(false);
+        c.setFileFilter(SESSION_FILE_FILTER);
+        c.showSaveDialog(this);
+        File x = c.getSelectedFile();
+        if (x == null) {
+            return;
+        }
+        if (!x.getName().toLowerCase().endsWith(".sine-session")) {
+            x = new File(x.getAbsolutePath() + ".sine-session");
+        }
+        if (x.exists()) {
+            int sel = JOptionPane.showConfirmDialog(rootPane, Utils.getLocString("MAIN_CONFIRM_OVERWRITE"), getTitle(), JOptionPane.YES_NO_OPTION);
+            if (sel == -1) {
+                return;
+            }
+            if (sel == JOptionPane.NO_OPTION) {
+                exportSessionActionPerformed(null);
+                return;
+            }
+        }
+        try {
+            SessionIO.exportSession(preset, x);
+        } catch (Throwable t) {
+            JOptionPane.showMessageDialog(rootPane, t.getMessage(), getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_exportSessionActionPerformed
+
+    private void importSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importSessionActionPerformed
+        JFileChooser c = new JFileChooser(lastDir);
+        c.setFileFilter(SESSION_FILE_FILTER);
+        c.setAcceptAllFileFilterUsed(false);
+        c.showOpenDialog(this);
+        File x = c.getSelectedFile();
+        if (x == null) {
+            return;
+        }
+        try {
+            SessionIO.Session s = SessionIO.importSession(x);
+            loadPreset(s.preset);
+            if (playerPanel.isPlaying()) {
+                playerPanel.stop();
+            }
+            modified = false;
+            clearUndoStack();
+            saveToUndoStack();
+            lastFile = null;
+        } catch (Throwable t) {
+            JOptionPane.showMessageDialog(rootPane, Utils.getLocString("SESSION_ERROR_INVALID") + ": " + t.getMessage(), getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_importSessionActionPerformed
     /**
      * this method is called before creating a new preset, loading, or quitting.
      * it also takes care of showing the save dialog.
@@ -1174,9 +1259,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JPanel editPanel;
     private javax.swing.JMenuItem export;
+    private javax.swing.JMenuItem exportSession;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem help;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem importSession;
     private javax.swing.JMenuItem importHBX;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
