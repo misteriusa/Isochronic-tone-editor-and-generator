@@ -646,6 +646,7 @@ public class Main extends JFrame {
     }
 
     public static void main(String args[]) {
+        FirstRunWizard.maybeShow();
         try {
             //check sound card
             PCSoundBackend test = new PCSoundBackend(44100, 1);

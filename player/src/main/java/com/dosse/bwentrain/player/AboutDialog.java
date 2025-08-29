@@ -85,7 +85,8 @@ public class AboutDialog extends JDialog {
         });
         panel.add(quit);
         scroll = new HTMLPanel();
-        scroll.setHTML("<div style='font-family:" + Main.BASE_FONT.getFamily() + "; font-size:" + (int) (Main.BASE_FONT_PX * 0.8) + "px;'>" + Utils.getLocString("ABOUT_TEXT") + "</div>");
+        String disclaimer = "<br/><br/><b>Disclaimer:</b> This software is for informational purposes only and is not a medical device. Consult a qualified healthcare professional before use.";
+        scroll.setHTML("<div style='font-family:" + Main.BASE_FONT.getFamily() + "; font-size:" + (int) (Main.BASE_FONT_PX * 0.8) + "px;'>" + Utils.getLocString("ABOUT_TEXT") + disclaimer + "</div>");
         scroll.setBorder(null);
         scroll.setForeground(Main.TEXT);
         scroll.setBackground(Main.DEFAULT_BACKGROUND);

@@ -1081,6 +1081,7 @@ public class Main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        FirstRunWizard.maybeShow();
         try {
             //<editor-fold defaultstate="collapsed" desc="MetalTheme (for swing stuff)">
             MetalLookAndFeel.setCurrentTheme(new MetalTheme() {
