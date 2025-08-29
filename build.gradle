@@ -14,16 +14,16 @@ allprojects {
     }
 }
 
-// Configure all sub-projects (player, editor, cli).
+// Configure all sub-projects (player, editor, cli, auth).
 subprojects {
     // Apply the 'java' plugin for Java compilation and the 'application' plugin to create executables.
     apply plugin: 'java'
     apply plugin: 'application'
 
-    // Configure the Java toolchain to use Java 17 for all sub-projects.
+    // Configure the Java toolchain to use Java 21 for all sub-projects.
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
+            languageVersion = JavaLanguageVersion.of(21)
         }
     }
 
@@ -51,16 +51,19 @@ subprojects {
     }
 
     // Register a custom 'fatJar' task to create a single, executable JAR
-    // that includes all dependencies.
-    tasks.register('fatJar', Jar) {
-        archiveClassifier.set('all') // Appends '-all' to the JAR file name.
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Exclude duplicate files from dependencies.
-        manifest.attributes('Main-Class': application.mainClass.get()) // Set the main class in the manifest.
-        // Collect all runtime dependencies and package them into the JAR.
-        from {
-            configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    // that includes all dependencies. Libraries such as the 'auth' module
+    // do not declare a main class and therefore skip this task.
+    if (project.name != 'auth') {
+        tasks.register('fatJar', Jar) {
+            archiveClassifier.set('all') // Appends '-all' to the JAR file name.
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Exclude duplicate files from dependencies.
+            manifest.attributes('Main-Class': application.mainClass.get()) // Set the main class in the manifest.
+            // Collect all runtime dependencies and package them into the JAR.
+            from {
+                configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+            }
+            with jar
         }
-        with jar
     }
 }
 

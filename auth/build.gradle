@@ -1,0 +1,5 @@
+plugins {
+    id 'java'
+}
+
+// Provide minimal Jar for authentication utilities.

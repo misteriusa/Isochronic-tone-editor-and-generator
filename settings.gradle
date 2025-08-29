@@ -7,7 +7,7 @@
 rootProject.name = 'sine'
 
 // Include all sub-projects.
-include 'player', 'editor', 'cli'
+include 'player', 'editor', 'cli', 'auth'
 
 // Define the custom directory for the 'player' sub-project.
 project(':player').projectDir = file('SINE')
@@ -15,4 +15,4 @@ project(':player').projectDir = file('SINE')
 // Define the custom directory for the 'editor' sub-project.
 project(':editor').projectDir = file('SINE-Editor')
 
-// The 'cli' project is assumed to be in a directory named 'cli' by convention.
+// The 'cli', 'auth' projects are assumed to be in directories named accordingly.
