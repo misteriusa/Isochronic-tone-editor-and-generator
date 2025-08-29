@@ -22,10 +22,19 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.net.URI;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * some common functions used throughout the application
@@ -142,5 +151,57 @@ public class Utils {
             String[] families = e.getAvailableFontFamilyNames();
             return new Font(families[0], Font.PLAIN, (int) Main.TEXT_SIZE);
         }
+    }
+
+    private static final int PRESET_VERSION = 1;
+
+    /**
+     * Loads a preset JSON from an input stream and validates it against the
+     * versioned schema.
+     *
+     * @param in stream containing the JSON preset
+     * @return validated preset as JSONObject
+     * @throws IOException if reading fails or version unsupported
+     * @throws ValidationException if schema validation fails
+     */
+    public static JSONObject loadPreset(InputStream in) throws IOException, ValidationException {
+        JSONObject data = new JSONObject(new JSONTokener(in)); // parse JSON
+        int version = data.getInt("version");
+        if (version != PRESET_VERSION) { // ensure we support the version
+            throw new IOException("Unsupported preset version: " + version);
+        }
+        try (InputStream schemaStream = Utils.class.getResourceAsStream("/presets/preset-schema-v" + version + ".json")) {
+            if (schemaStream == null) {
+                throw new IOException("Schema not found for version " + version);
+            }
+            Schema schema = SchemaLoader.load(new JSONObject(new JSONTokener(schemaStream))); // load schema
+            schema.validate(data); // throws ValidationException on failure
+        }
+        return data;
+    }
+
+    /**
+     * Serializes a preset JSONObject to an output stream after validating
+     * against the bundled schema.
+     *
+     * @param preset preset data to serialize
+     * @param out destination stream
+     * @throws IOException if version unsupported or writing fails
+     * @throws ValidationException if schema validation fails
+     */
+    public static void savePreset(JSONObject preset, OutputStream out) throws IOException, ValidationException {
+        int version = preset.optInt("version", PRESET_VERSION); // default version
+        if (version != PRESET_VERSION) {
+            throw new IOException("Unsupported preset version: " + version);
+        }
+        try (InputStream schemaStream = Utils.class.getResourceAsStream("/presets/preset-schema-v" + version + ".json")) {
+            if (schemaStream == null) {
+                throw new IOException("Schema not found for version " + version);
+            }
+            Schema schema = SchemaLoader.load(new JSONObject(new JSONTokener(schemaStream)));
+            schema.validate(preset); // ensure preset matches schema before saving
+        }
+        preset.put("version", version); // guarantee version field is present
+        out.write(preset.toString(2).getBytes(StandardCharsets.UTF_8)); // pretty print for readability
     }
 }
