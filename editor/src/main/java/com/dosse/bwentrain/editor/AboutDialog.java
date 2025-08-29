@@ -71,7 +71,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         version.setText(bundle.getString("AboutDialog.version.text")); // NOI18N
 
-        copyright.setText(bundle.getString("AboutDialog.copyright.text")); // NOI18N
+        copyright.setText("<html>" + bundle.getString("AboutDialog.copyright.text") + "<br/><br/><b>Disclaimer:</b> This software is for informational purposes only and is not a medical device. Consult a qualified healthcare professional before use.</html>"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
