@@ -3,6 +3,10 @@
  */
 
 // Configure all projects (the root project and all sub-projects)
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.1.0' apply false
+}
+
 allprojects {
     repositories {
         // Use Maven Central for standard dependencies.
@@ -105,9 +109,21 @@ project(':player') {
 
 // Configure the 'editor' sub-project.
 project(':editor') {
+    apply plugin: 'org.openjfx.javafxplugin'
+
     application {
-        // Set the main class for the editor application.
-        mainClass = 'com.dosse.bwentrain.editor.Main'
+        // Launch the JavaFX-based editor entry point.
+        mainClass = 'com.dosse.bwentrain.editor.EditorApp'
+    }
+
+    javafx {
+        version = '21.0.2'
+        modules = [ 'javafx.controls' ]
+    }
+
+    dependencies {
+        // TestFX offers simple integration testing for JavaFX views
+        testImplementation 'org.testfx:testfx-junit5:4.0.16-alpha'
     }
 }
 
