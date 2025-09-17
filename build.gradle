@@ -32,6 +32,10 @@ allprojects {
         // Add JUnit 5 for testing.
         testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 
+        // JSON handling and schema validation
+        implementation 'org.json:json:20231013'
+        implementation 'org.everit.json:org.everit.json.schema:1.5.1'
+
         // Add local JARs from the 'libs' directory as dependencies by name.
         implementation name: 'LibBWEntrainment'
         implementation name: 'LibBWEntrainment-Renderer-Isochronic'
