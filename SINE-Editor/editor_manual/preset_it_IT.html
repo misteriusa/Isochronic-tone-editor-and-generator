@@ -24,5 +24,17 @@
         E la traccia di Entrainment:
         <div><img src="preset_3.png"/></div>
         Altre informazioni su come leggere e modificare gli envelope si trovano nella sezione <a href="controls_it_IT.html">controlli</a> di questo manuale.
+
+        <h3>Esempio di preset in JSON</h3>
+        L'editor può leggere e salvare i preset anche in un semplice formato JSON. Un preset minimale è il seguente:
+        <pre>{
+  "version": 1,
+  "name": "Quick Nap",
+  "frequency": 10,
+  "gain": 0.8,
+  "author": "dosse",
+  "description": "Sessione rilassante breve"
+}</pre>
+        La struttura JSON è validata rispetto al file <code>preset-schema-v1.json</code> incluso con l'applicazione.
     </body>
 </html>

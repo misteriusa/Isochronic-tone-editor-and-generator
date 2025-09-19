@@ -24,5 +24,17 @@
         And the Entrainment Track:
         <div><img src="preset_3.png"/></div>
         More info about how to read and edit the envelopes can be found in the <a href="controls.html">Editor controls</a> section of this manual.
+
+        <h3>JSON Preset Example</h3>
+        The editor can also read and write presets in a simple JSON format. A minimal preset looks like this:
+        <pre>{
+  "version": 1,
+  "name": "Quick Nap",
+  "frequency": 10,
+  "gain": 0.8,
+  "author": "dosse",
+  "description": "Short relaxing session"
+}</pre>
+        The JSON structure is validated against <code>preset-schema-v1.json</code> included with the application.
     </body>
 </html>
