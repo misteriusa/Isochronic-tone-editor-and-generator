@@ -1,7 +1,11 @@
 package com.example;
 
 import com.dosse.binaural.BinauralEnvelope;
+import com.dosse.bwentrain.editor.ADSR;
+import com.dosse.bwentrain.editor.Waveform;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,5 +29,23 @@ public class BinauralEnvelopeTest {
         byte[] hes = env.toHES();
         BinauralEnvelope fromHes = BinauralEnvelope.fromHES(hes);
         assertEquals(env.toString(), fromHes.toString());
+    }
+
+    @Test
+    public void testWaveformsAndEnvelope() {
+        int samples = 100;
+        float sr = 1000f;
+        for (Waveform wf : Waveform.values()) {
+            float[] buf = new float[samples];
+            wf.generate(10f, sr, buf);
+            assertEquals(samples, buf.length);
+        }
+        ADSR adsr = new ADSR(0.01f, 0.1f, 0.5f, 0.1f, sr);
+        float[] tone = new float[samples];
+        Arrays.fill(tone, 1f);
+        adsr.apply(tone);
+        assertEquals(0f, tone[0], 1e-3);
+        assertEquals(0f, tone[samples - 1], 1e-3);
+        assertTrue(tone[samples / 2] > 0f);
     }
 }
