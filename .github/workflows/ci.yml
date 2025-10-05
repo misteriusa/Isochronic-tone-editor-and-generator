@@ -1,42 +1,50 @@
-# This workflow defines a Continuous Integration (CI) pipeline that is triggered
-# on pushes to the 'main' branch and on any pull request.
 name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
 
 jobs:
-  # The 'build' job runs on an Ubuntu runner.
-  build:
+  backend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        run: pip install poetry==1.8.3
+      - name: Install deps
+        run: poetry install --with dev --directory backend
+      - name: Lint & Test
+        run: |
+          poetry run ruff check backend
+          poetry run mypy backend
+          poetry run pytest tests/backend
+  frontend:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the repository's code.
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Set up the Java Development Kit (JDK).
-      # This uses Java version 17 from the 'temurin' distribution.
-      # It also caches Gradle dependencies to speed up future builds.
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
-
-      # Step 3: Install Gradle so the build can run without a bundled wrapper.
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: 8.14
-
-      # Step 4: Build the project using the installed Gradle.
-      # The 'build' task compiles the code, runs tests, and assembles the application.
-      # The GRADLE_OPTS environment variable is used to disable the Gradle daemon,
-      # which is recommended for CI environments.
-      - name: Build with Gradle
-        run: gradle build
-        env:
-          GRADLE_OPTS: -Dorg.gradle.daemon=false
+          node-version: 20
+      - name: Install deps
+        run: |
+          cd frontend
+          npm install
+      - name: Lint
+        run: |
+          cd frontend
+          npm run lint -- --no-cache
+      - name: Test
+        run: |
+          cd frontend
+          npm run test -- --run
+      - name: Build
+        run: |
+          cd frontend
+          npm run build
