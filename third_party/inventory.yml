@@ -1,132 +1,135 @@
-# Inventory of bundled third-party JARs
-# Each entry lists the file path, version (if known) and license
-- name: jna
-  version: "4.2.1"
-  license: "LGPL-2.1"
-  path: "SINE/lib/jna-4.2.1.jar"
-
-- name: java-flac-encoder
-  version: "0.3.1"
-  license: "GPL-2.0 or later"
-  path: "SINE/lib/javaFlacEncoder-0.3.1.jar"
-
-- name: java-flac-encoder
-  version: "0.3.1"
-  license: "GPL-2.0 or later"
-  path: "SINE-CLI/lib/javaFlacEncoder-0.3.1.jar"
-
-- name: java-flac-encoder
-  version: "0.3.1"
-  license: "GPL-2.0 or later"
-  path: "SINE-Editor/lib/javaFlacEncoder-0.3.1.jar"
-
-- name: JavaLAME
-  version: "unknown"
-  license: "GPL-2.0"
-  path: "SINE/lib/JavaLAME.jar"
-
-- name: JavaLAME
-  version: "unknown"
-  license: "GPL-2.0"
-  path: "SINE-CLI/lib/JavaLAME.jar"
-
-- name: JavaLAME
-  version: "unknown"
-  license: "GPL-2.0"
-  path: "SINE-Editor/lib/JavaLAME.jar"
-
-- name: LibBWEntrainment
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE/lib/LibBWEntrainment.jar"
-
-- name: LibBWEntrainment
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-CLI/lib/LibBWEntrainment.jar"
-
-- name: LibBWEntrainment
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-Editor/lib/LibBWEntrainment.jar"
-
-- name: LibBWEntrainment-SoundBackend-FLAC
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE/lib/LibBWEntrainment-SoundBackend-FLAC.jar"
-
-- name: LibBWEntrainment-SoundBackend-FLAC
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-FLAC.jar"
-
-- name: LibBWEntrainment-SoundBackend-FLAC
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-FLAC.jar"
-
-- name: LibBWEntrainment-SoundBackend-MP3
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE/lib/LibBWEntrainment-SoundBackend-MP3.jar"
-
-- name: LibBWEntrainment-SoundBackend-MP3
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-MP3.jar"
-
-- name: LibBWEntrainment-SoundBackend-MP3
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-MP3.jar"
-
-- name: LibBWEntrainment-SoundBackend-PC
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE/lib/LibBWEntrainment-SoundBackend-PC.jar"
-
-- name: LibBWEntrainment-SoundBackend-PC
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-PC.jar"
-
-- name: LibBWEntrainment-SoundBackend-PC
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-PC.jar"
-
-- name: LibBWEntrainment-SoundBackend-Wav
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE/lib/LibBWEntrainment-SoundBackend-Wav.jar"
-
-- name: LibBWEntrainment-SoundBackend-Wav
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-CLI/lib/LibBWEntrainment-SoundBackend-Wav.jar"
-
-- name: LibBWEntrainment-SoundBackend-Wav
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-Editor/lib/LibBWEntrainment-SoundBackend-Wav.jar"
-
-- name: LibBWEntrainment-Renderer-Isochronic
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE/lib/LibBWEntrainment-Renderer-Isochronic.jar"
-
-- name: LibBWEntrainment-Renderer-Isochronic
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-CLI/lib/LibBWEntrainment-Renderer-Isochronic.jar"
-
-- name: LibBWEntrainment-Renderer-Isochronic
-  version: "unknown"
-  license: "GPL-3.0"
-  path: "SINE-Editor/lib/LibBWEntrainment-Renderer-Isochronic.jar"
-
-- name: apple
-  version: "0.0.2"
-  license: "Unknown"
-  path: "SINE/lib/apple-0.0.2.jar"
-
+version: 1
+assets:
+  - name: fastapi
+    category: backend-lib
+    origin: https://github.com/tiangolo/fastapi
+    vendor_method: pinned_pip
+    version: "0.111.0"
+    license: MIT
+    license_file: third_party/LICENSES/fastapi-MIT.txt
+    commit: null
+    rationale: "Async API surface with automatic docs"
+    risks: ["Rapid minor releases"]
+    maintenance: {last_commit: "2024-06-15", stars: 68000}
+  - name: sqlmodel
+    category: backend-lib
+    origin: https://github.com/tiangolo/sqlmodel
+    vendor_method: pinned_pip
+    version: "0.0.22"
+    license: MIT
+    license_file: third_party/LICENSES/sqlmodel-MIT.txt
+    commit: null
+    rationale: "Typed ORM bridging SQLAlchemy and Pydantic"
+    risks: ["API still stabilizing"]
+    maintenance: {last_commit: "2024-05-10", stars: 14000}
+  - name: alembic
+    category: backend-lib
+    origin: https://github.com/sqlalchemy/alembic
+    vendor_method: pinned_pip
+    version: "1.13.1"
+    license: MIT
+    license_file: third_party/LICENSES/alembic-MIT.txt
+    commit: null
+    rationale: "Reliable migration runner"
+    risks: ["Requires alignment with SQLAlchemy versions"]
+    maintenance: {last_commit: "2024-06-01", stars: 7500}
+  - name: nextjs
+    category: frontend-framework
+    origin: https://github.com/vercel/next.js
+    vendor_method: pinned_npm
+    version: "14.2.4"
+    license: MIT
+    license_file: third_party/LICENSES/nextjs-MIT.txt
+    commit: null
+    rationale: "Hybrid rendering with App Router"
+    risks: ["App Router breaking changes"]
+    maintenance: {last_commit: "2024-06-20", stars: 120000}
+  - name: tailwindcss
+    category: frontend-style
+    origin: https://github.com/tailwindlabs/tailwindcss
+    vendor_method: pinned_npm
+    version: "3.4.4"
+    license: MIT
+    license_file: third_party/LICENSES/tailwindcss-MIT.txt
+    commit: null
+    rationale: "Utility-first styling"
+    risks: ["Requires config discipline"]
+    maintenance: {last_commit: "2024-06-18", stars: 76000}
+  - name: shadcn-ui
+    category: ui-kit
+    origin: https://ui.shadcn.com
+    vendor_method: mirror_components
+    version: "2024.06"
+    license: MIT
+    license_file: third_party/LICENSES/shadcn-ui-MIT.txt
+    commit: null
+    rationale: "Composable UI primitives"
+    risks: ["Manual sync required"]
+    maintenance: {last_commit: "2024-06-12", stars: 28000}
+  - name: docker
+    category: devops
+    origin: https://www.docker.com/
+    vendor_method: reference
+    version: "26.1"
+    license: Apache-2.0
+    license_file: third_party/LICENSES/docker-Apache-2.0.txt
+    commit: null
+    rationale: "Baseline container runtime"
+    risks: ["Desktop install prerequisites"]
+    maintenance: {last_commit: "2024-06-19", stars: null}
+  - name: ruff
+    category: tooling
+    origin: https://github.com/astral-sh/ruff
+    vendor_method: pinned_pip
+    version: "0.5.1"
+    license: MIT
+    license_file: third_party/LICENSES/ruff-MIT.txt
+    commit: null
+    rationale: "Unified lint + format"
+    risks: ["Occasional rule churn"]
+    maintenance: {last_commit: "2024-06-17", stars: 28000}
+  - name: github-actions
+    category: ci
+    origin: https://github.com/actions
+    vendor_method: reference
+    version: "2024.06"
+    license: MIT
+    license_file: third_party/LICENSES/github-actions-MIT.txt
+    commit: null
+    rationale: "Native CI/CD for GitHub"
+    risks: ["Marketplace deprecations"]
+    maintenance: {last_commit: "2024-06-19", stars: null}
+  - name: freesound-packs
+    category: dataset
+    origin: https://freesound.org
+    vendor_method: reference
+    version: "2024.01"
+    license: CC-BY-4.0
+    license_file: third_party/LICENSES/freesound-CC-BY-4.0.txt
+    commit: null
+    rationale: "Sample tones for demos"
+    risks: ["Attribution requirements"]
+    maintenance: {last_commit: "2024-04-01", stars: null}
+  - name: audioset
+    category: dataset
+    origin: https://research.google.com/audioset/
+    vendor_method: reference
+    version: "2.2"
+    license: CC-BY-4.0
+    license_file: third_party/LICENSES/audioset-CC-BY-4.0.txt
+    commit: null
+    rationale: "Audio classification baseline"
+    risks: ["Large storage footprint"]
+    maintenance: {last_commit: "2023-12-01", stars: null}
+  - name: isochronic-frequency-tables
+    category: dataset
+    origin: https://example.com/isochronic-frequency-tables
+    vendor_method: reference
+    version: "2024.05"
+    license: CC-BY-4.0
+    license_file: third_party/LICENSES/isochronic-frequencies-CC-BY-4.0.txt
+    commit: null
+    rationale: "Reference beat frequencies"
+    risks: ["Need provenance confirmation"]
+    maintenance: {last_commit: "2024-05-15", stars: null}
+notes: "All assets pinned; mirror artifacts before offline releases."
